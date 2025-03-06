@@ -3,7 +3,7 @@ import Connection from "./webrtc_connection"
 import createWebrtcChannel from '../channels/webrtc_channel'
 
 export default class extends Controller {
-  static targets = [ "main", "remote" ]
+  static targets = [ "main", "remote", "mute" ]
 
   constructor(props) {
     super(props)
@@ -26,5 +26,14 @@ export default class extends Controller {
   joinRoom() {
     this.connection.loadStream()
     this.connection.createOffer()
+  }
+
+  toggleMute() {
+    const audioTrack = this.connection.localStream.getAudioTracks()[0];
+  if (audioTrack) {
+    audioTrack.enabled = !audioTrack.enabled; // Toggle mute/unmute
+    console.log(audioTrack.enabled ? "Unmuted" : "Muted");
+    this.muteTarget.innerText = audioTrack.enabled ? "Mute" : "Unmute";
+  }
   }
 }
